@@ -1,0 +1,26 @@
+# Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
+
+client_id = "a7454efad8cb142259505437b5c1f316"
+name = "saiv-vf"
+application_url = "https://saiv.vercel.app"
+embedded = false
+
+[webhooks]
+api_version = "2026-01"
+
+  [webhooks.privacy_compliance]
+  customer_deletion_url = "https://saiv.vercel.app/api/shopify/webhooks/customers-redact"
+  customer_data_request_url = "https://saiv.vercel.app/api/shopify/webhooks/customers-data-request"
+  shop_deletion_url = "https://saiv.vercel.app/api/shopify/webhooks/shop-redact"
+
+[access_scopes]
+# Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
+scopes = "read_customers,read_fulfillments,read_orders,read_products"
+optional_scopes = [ ]
+use_legacy_install_flow = false
+
+[auth]
+redirect_urls = [ "https://saiv.vercel.app/api/shopify/callback" ]
+
+[pos]
+embedded = false

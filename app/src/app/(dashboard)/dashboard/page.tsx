@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import Link from "next/link"
 import { MessageSquare, CheckCircle, AlertCircle, Clock } from "lucide-react"
+import { FetchEmailsButton } from "@/components/FetchEmailsButton"
 
 export default async function DashboardPage() {
   const user = await getCurrentUser()
@@ -32,13 +33,16 @@ export default async function DashboardPage() {
 
   return (
     <div>
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">
-          Bonjour, {user?.name || ""}
-        </h1>
-        <p className="text-gray-600">
-          Voici l'activite de votre SAV aujourd'hui
-        </p>
+      <div className="mb-8 flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900">
+            Bonjour, {user?.name || ""}
+          </h1>
+          <p className="text-gray-600">
+            Voici l'activite de votre SAV aujourd'hui
+          </p>
+        </div>
+        <FetchEmailsButton />
       </div>
 
       {/* Stats Cards */}
