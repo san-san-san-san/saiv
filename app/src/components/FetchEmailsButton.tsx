@@ -13,6 +13,7 @@ export function FetchEmailsButton() {
     autoReplied?: number
     escalated?: number
     error?: string
+    details?: string
   } | null>(null)
 
   const fetchEmails = async () => {
@@ -52,10 +53,15 @@ export function FetchEmailsButton() {
       {result && (
         <div className="flex items-center gap-2 text-sm">
           {result.error ? (
-            <>
-              <AlertCircle className="h-4 w-4 text-red-500" />
-              <span className="text-red-600">{result.error}</span>
-            </>
+            <div className="flex flex-col">
+              <div className="flex items-center gap-2">
+                <AlertCircle className="h-4 w-4 text-red-500" />
+                <span className="text-red-600">{result.error}</span>
+              </div>
+              {result.details && (
+                <span className="text-xs text-gray-500 ml-6">{result.details}</span>
+              )}
+            </div>
           ) : (
             <>
               <CheckCircle className="h-4 w-4 text-green-500" />

@@ -9,26 +9,38 @@ export async function POST() {
   try {
     const user = await getCurrentUser()
     if (!user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+      return NextResponse.json({ error: "Non connecté - veuillez vous reconnecter" }, { status: 401 })
     }
 
     const shop = user.shops[0]
     if (!shop) {
-      return NextResponse.json({ error: "No shop found" }, { status: 404 })
+      return NextResponse.json({ error: "Aucune boutique trouvée - connectez Shopify d'abord" }, { status: 404 })
     }
 
     if (!shop.gmailRefreshToken) {
-      return NextResponse.json({ error: "Gmail not connected" }, { status: 400 })
+      return NextResponse.json({ error: "Gmail non connecté - allez dans Paramètres pour connecter Gmail" }, { status: 400 })
     }
 
     // Process emails for this shop
     const result = await processShopEmails(shop)
 
     return NextResponse.json(result)
-  } catch (error) {
+  } catch (error: any) {
     console.error("Fetch emails error:", error)
+
+    // More specific error messages
+    let errorMessage = "Erreur lors de la récupération des emails"
+
+    if (error?.message?.includes("invalid_grant")) {
+      errorMessage = "Token Gmail expiré - reconnectez Gmail dans les paramètres"
+    } else if (error?.message?.includes("insufficient")) {
+      errorMessage = "Permissions Gmail insuffisantes - reconnectez Gmail"
+    } else if (error?.code === "ENOTFOUND") {
+      errorMessage = "Erreur de connexion au serveur Google"
+    }
+
     return NextResponse.json(
-      { error: "Failed to fetch emails", details: String(error) },
+      { error: errorMessage, details: error?.message || String(error) },
       { status: 500 }
     )
   }
