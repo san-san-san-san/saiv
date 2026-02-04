@@ -1,0 +1,11 @@
+# BMAD Project Configuration
+project_name: "Saiv"
+user_name: "User"
+communication_language: "fr"
+document_output_language: "fr"
+user_skill_level: "expert"
+
+# Output directories
+output_folder: "_bmad-output"
+planning_artifacts: "_bmad-output/planning"
+product_knowledge: "_bmad-output/docs"

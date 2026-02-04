@@ -1,0 +1,177 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Plan {
+  FREE
+  STARTER
+  GROWTH
+  SCALE
+}
+
+enum ConversationStatus {
+  PENDING
+  AUTO_REPLIED
+  ESCALATED
+  RESOLVED
+}
+
+enum ConversationType {
+  TRACKING
+  RETURN
+  REFUND
+  PRODUCT
+  COMPLAINT
+  OTHER
+}
+
+enum MessageDirection {
+  INBOUND
+  OUTBOUND
+}
+
+enum Tone {
+  FORMAL
+  CASUAL
+  FRIENDLY
+}
+
+model User {
+  id                String   @id @default(cuid())
+  email             String   @unique
+  passwordHash      String?
+  name              String?
+  plan              Plan     @default(FREE)
+  stripeCustomerId  String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  shops             Shop[]
+}
+
+model Shop {
+  id                  String    @id @default(cuid())
+  userId              String
+  user                User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  shopifyDomain       String    @unique
+  shopifyAccessToken  String
+  shopName            String
+
+  emailAddress        String?
+  gmailRefreshToken   String?
+
+  tone                Tone      @default(CASUAL)
+  autoReplyEnabled    Boolean   @default(true)
+  policies            Json      @default("{}")
+  faq                 Json      @default("[]")
+  signature           String?
+
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+
+  customers           Customer[]
+  orders              Order[]
+  conversations       Conversation[]
+  usageLogs           UsageLog[]
+}
+
+model Customer {
+  id                 String    @id @default(cuid())
+  shopId             String
+  shop               Shop      @relation(fields: [shopId], references: [id], onDelete: Cascade)
+
+  email              String
+  shopifyCustomerId  String?
+  name               String?
+  totalOrders        Int       @default(0)
+  totalSpent         Decimal   @default(0)
+
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+
+  orders             Order[]
+  conversations      Conversation[]
+
+  @@unique([shopId, email])
+}
+
+model Order {
+  id                 String    @id @default(cuid())
+  shopId             String
+  shop               Shop      @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  customerId         String?
+  customer           Customer? @relation(fields: [customerId], references: [id])
+
+  shopifyOrderId     String
+  orderNumber        String
+  status             String
+  fulfillmentStatus  String?
+  trackingNumber     String?
+  trackingUrl        String?
+  totalPrice         Decimal
+  lineItems          Json      @default("[]")
+
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+
+  conversations      Conversation[]
+
+  @@unique([shopId, shopifyOrderId])
+}
+
+model Conversation {
+  id              String             @id @default(cuid())
+  shopId          String
+  shop            Shop               @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  customerId      String?
+  customer        Customer?          @relation(fields: [customerId], references: [id])
+  orderId         String?
+  order           Order?             @relation(fields: [orderId], references: [id])
+
+  subject         String
+  status          ConversationStatus @default(PENDING)
+  type            ConversationType   @default(OTHER)
+  gmailThreadId   String?
+
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+  resolvedAt      DateTime?
+
+  messages        Message[]
+
+  @@index([shopId, status])
+  @@index([shopId, createdAt])
+}
+
+model Message {
+  id              String           @id @default(cuid())
+  conversationId  String
+  conversation    Conversation     @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  direction       MessageDirection
+  sender          String
+  content         String
+  gmailMessageId  String?
+  aiGenerated     Boolean          @default(false)
+
+  createdAt       DateTime         @default(now())
+}
+
+model UsageLog {
+  id                 String   @id @default(cuid())
+  shopId             String
+  shop               Shop     @relation(fields: [shopId], references: [id], onDelete: Cascade)
+
+  month              DateTime @db.Date
+  emailsReceived     Int      @default(0)
+  emailsAutoReplied  Int      @default(0)
+  emailsEscalated    Int      @default(0)
+  aiTokensUsed       Int      @default(0)
+
+  @@unique([shopId, month])
+}
