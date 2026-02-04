@@ -8,6 +8,7 @@ const JWT_SECRET = new TextEncoder().encode(process.env.JWT_SECRET || 'fallback-
 export interface JWTPayload {
   userId: string
   email: string
+  [key: string]: unknown
 }
 
 export async function hashPassword(password: string): Promise<string> {
