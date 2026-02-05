@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { RefreshCw, CheckCircle, AlertCircle } from "lucide-react"
+import { RefreshCw, CheckCircle, AlertCircle, Mail } from "lucide-react"
 
 export function FetchEmailsButton() {
   const [loading, setLoading] = useState(false)
@@ -45,27 +45,31 @@ export function FetchEmailsButton() {
 
   return (
     <div className="flex items-center gap-4">
-      <Button onClick={fetchEmails} disabled={loading} variant="outline">
-        <RefreshCw className={`h-4 w-4 mr-2 ${loading ? "animate-spin" : ""}`} />
+      <Button onClick={fetchEmails} disabled={loading} variant="secondary">
+        <RefreshCw className={`h-4 w-4 ${loading ? "animate-spin" : ""}`} />
         {loading ? "Récupération..." : "Récupérer les emails"}
       </Button>
 
       {result && (
-        <div className="flex items-center gap-2 text-sm">
+        <div className={`flex items-center gap-2 text-sm px-4 py-2 rounded-xl ${
+          result.error
+            ? "bg-red-500/10 border border-red-500/20"
+            : "bg-emerald-500/10 border border-emerald-500/20"
+        }`}>
           {result.error ? (
             <div className="flex flex-col">
               <div className="flex items-center gap-2">
-                <AlertCircle className="h-4 w-4 text-red-500" />
-                <span className="text-red-600">{result.error}</span>
+                <AlertCircle className="h-4 w-4 text-red-400" />
+                <span className="text-red-300">{result.error}</span>
               </div>
               {result.details && (
-                <span className="text-xs text-gray-500 ml-6">{result.details}</span>
+                <span className="text-xs text-red-400/70 ml-6">{result.details}</span>
               )}
             </div>
           ) : (
             <>
-              <CheckCircle className="h-4 w-4 text-green-500" />
-              <span className="text-green-600">
+              <CheckCircle className="h-4 w-4 text-emerald-400" />
+              <span className="text-emerald-300">
                 {result.totalEmails} emails trouvés, {result.processed} traités
                 {result.autoReplied! > 0 && `, ${result.autoReplied} répondus auto`}
                 {result.escalated! > 0 && `, ${result.escalated} escaladés`}

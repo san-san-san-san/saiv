@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import Link from "next/link"
-import { MessageSquare, CheckCircle, AlertCircle, Clock } from "lucide-react"
+import { MessageSquare, CheckCircle, AlertCircle, Clock, ArrowRight, Sparkles, Mail, Zap } from "lucide-react"
 import { FetchEmailsButton } from "@/components/FetchEmailsButton"
 
 export default async function DashboardPage() {
@@ -36,39 +36,43 @@ export default async function DashboardPage() {
       <div className="mb-8 flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">
-            Bonjour, {user?.name || ""}
+            Bonjour, {user?.name || ""} 👋
           </h1>
-          <p className="text-gray-600">
-            Voici l'activite de votre SAV aujourd'hui
+          <p className="text-gray-500">
+            Voici l'activité de votre SAV aujourd'hui
           </p>
         </div>
         <FetchEmailsButton />
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">
+            <CardTitle className="text-sm font-medium text-gray-500">
               Emails aujourd'hui
             </CardTitle>
-            <MessageSquare className="h-4 w-4 text-gray-400" />
+            <div className="p-2 rounded-lg bg-blue-500/10">
+              <MessageSquare className="h-4 w-4 text-blue-500" />
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats?.emailsToday || 0}</div>
+            <div className="text-3xl font-bold text-gray-900">{stats?.emailsToday || 0}</div>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">
-              Resolus auto
+            <CardTitle className="text-sm font-medium text-gray-500">
+              Résolus auto
             </CardTitle>
-            <CheckCircle className="h-4 w-4 text-green-500" />
+            <div className="p-2 rounded-lg bg-emerald-500/10">
+              <CheckCircle className="h-4 w-4 text-emerald-500" />
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats?.autoResolved || 0}</div>
-            <p className="text-xs text-gray-500">
+            <div className="text-3xl font-bold text-gray-900">{stats?.autoResolved || 0}</div>
+            <p className="text-xs text-emerald-600 mt-1">
               {stats?.autoResolveRate || 0}% du total
             </p>
           </CardContent>
@@ -76,26 +80,30 @@ export default async function DashboardPage() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">
+            <CardTitle className="text-sm font-medium text-gray-500">
               En attente
             </CardTitle>
-            <AlertCircle className="h-4 w-4 text-yellow-500" />
+            <div className="p-2 rounded-lg bg-amber-500/10">
+              <AlertCircle className="h-4 w-4 text-amber-500" />
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats?.escalated || 0}</div>
+            <div className="text-3xl font-bold text-gray-900">{stats?.escalated || 0}</div>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">
+            <CardTitle className="text-sm font-medium text-gray-500">
               Temps moyen
             </CardTitle>
-            <Clock className="h-4 w-4 text-gray-400" />
+            <div className="p-2 rounded-lg bg-purple-500/10">
+              <Clock className="h-4 w-4 text-purple-500" />
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
-              {stats?.avgResponseTime || "< 2"} min
+            <div className="text-3xl font-bold text-gray-900">
+              {stats?.avgResponseTime || "< 2"} <span className="text-lg text-gray-500">min</span>
             </div>
           </CardContent>
         </Card>
@@ -103,40 +111,50 @@ export default async function DashboardPage() {
 
       {/* Recent Conversations */}
       <Card>
-        <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle>Conversations recentes</CardTitle>
+        <CardHeader className="flex flex-row items-center justify-between border-b border-gray-200/50">
+          <CardTitle className="flex items-center gap-2">
+            <MessageSquare className="h-4 w-4 text-blue-500" />
+            Conversations récentes
+          </CardTitle>
           <Link href="/conversations">
-            <Button variant="outline" size="sm">
+            <Button variant="secondary" size="sm">
               Voir tout
+              <ArrowRight className="h-4 w-4" />
             </Button>
           </Link>
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-0">
           {recentConversations.length === 0 ? (
-            <p className="text-gray-500 text-center py-8">
-              Aucune conversation pour le moment
-            </p>
+            <div className="flex flex-col items-center justify-center py-12">
+              <div className="p-3 rounded-xl bg-gray-50 border border-gray-200/50 mb-4">
+                <MessageSquare className="h-8 w-8 text-gray-400" />
+              </div>
+              <p className="text-gray-500">Aucune conversation pour le moment</p>
+            </div>
           ) : (
-            <div className="space-y-4">
+            <div className="divide-y divide-gray-200/50">
               {recentConversations.map((conv) => (
                 <Link
                   key={conv.id}
                   href={`/conversations/${conv.id}`}
-                  className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors"
+                  className="flex items-center justify-between p-4 hover:bg-gray-50/50 transition-all duration-200 group"
                 >
                   <div className="flex-1">
-                    <div className="flex items-center gap-2">
-                      <span className="font-medium">
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="font-medium text-gray-900">
                         {conv.customer?.name || conv.customer?.email || "Client"}
                       </span>
                       <StatusBadge status={conv.status} />
                     </div>
-                    <p className="text-sm text-gray-600 truncate">
+                    <p className="text-sm text-gray-500 truncate">
                       {conv.subject}
                     </p>
                   </div>
-                  <div className="text-sm text-gray-400">
-                    {new Date(conv.createdAt).toLocaleDateString("fr-FR")}
+                  <div className="flex items-center gap-3">
+                    <span className="text-sm text-gray-400">
+                      {new Date(conv.createdAt).toLocaleDateString("fr-FR")}
+                    </span>
+                    <ArrowRight className="h-4 w-4 text-gray-400 group-hover:text-blue-500 group-hover:translate-x-1 transition-all" />
                   </div>
                 </Link>
               ))}
@@ -160,7 +178,7 @@ function StatusBadge({ status }: { status: string }) {
     AUTO_REPLIED: "Auto",
     ESCALATED: "Escalade",
     PENDING: "En attente",
-    RESOLVED: "Resolu",
+    RESOLVED: "Résolu",
   }
 
   return (
@@ -174,29 +192,36 @@ function OnboardingPrompt({ hasShop, hasGmail }: { hasShop: boolean; hasGmail: b
   return (
     <div className="max-w-2xl mx-auto">
       <div className="text-center mb-8">
+        <div className="inline-flex p-3 rounded-2xl bg-gradient-to-br from-blue-500/20 to-purple-500/20 border border-blue-200/50 mb-4">
+          <Sparkles className="h-8 w-8 text-blue-500" />
+        </div>
         <h1 className="text-2xl font-bold text-gray-900 mb-2">
           Bienvenue sur Saiv !
         </h1>
-        <p className="text-gray-600">
+        <p className="text-gray-500">
           Configurez votre compte en quelques minutes
         </p>
       </div>
 
       <div className="space-y-4">
-        <Card className={hasShop ? "border-green-200 bg-green-50" : ""}>
+        <Card className={hasShop ? "!border-emerald-300 !bg-emerald-50/50" : ""}>
           <CardContent className="flex items-center justify-between p-6">
             <div className="flex items-center gap-4">
-              <div className={`w-10 h-10 rounded-full flex items-center justify-center ${hasShop ? "bg-green-500" : "bg-gray-200"}`}>
+              <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${
+                hasShop
+                  ? "bg-emerald-100"
+                  : "bg-gray-50 border border-gray-200"
+              }`}>
                 {hasShop ? (
-                  <CheckCircle className="h-5 w-5 text-white" />
+                  <CheckCircle className="h-6 w-6 text-emerald-500" />
                 ) : (
-                  <span className="text-gray-500 font-bold">1</span>
+                  <Zap className="h-6 w-6 text-gray-400" />
                 )}
               </div>
               <div>
-                <h3 className="font-semibold">Connecter Shopify</h3>
-                <p className="text-sm text-gray-600">
-                  Accedez a vos commandes et clients
+                <h3 className="font-semibold text-gray-900">Connecter Shopify</h3>
+                <p className="text-sm text-gray-500">
+                  Accédez à vos commandes et clients
                 </p>
               </div>
             </div>
@@ -208,19 +233,23 @@ function OnboardingPrompt({ hasShop, hasGmail }: { hasShop: boolean; hasGmail: b
           </CardContent>
         </Card>
 
-        <Card className={hasGmail ? "border-green-200 bg-green-50" : ""}>
+        <Card className={hasGmail ? "!border-emerald-300 !bg-emerald-50/50" : ""}>
           <CardContent className="flex items-center justify-between p-6">
             <div className="flex items-center gap-4">
-              <div className={`w-10 h-10 rounded-full flex items-center justify-center ${hasGmail ? "bg-green-500" : "bg-gray-200"}`}>
+              <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${
+                hasGmail
+                  ? "bg-emerald-100"
+                  : "bg-gray-50 border border-gray-200"
+              }`}>
                 {hasGmail ? (
-                  <CheckCircle className="h-5 w-5 text-white" />
+                  <CheckCircle className="h-6 w-6 text-emerald-500" />
                 ) : (
-                  <span className="text-gray-500 font-bold">2</span>
+                  <Mail className="h-6 w-6 text-gray-400" />
                 )}
               </div>
               <div>
-                <h3 className="font-semibold">Connecter Gmail</h3>
-                <p className="text-sm text-gray-600">
+                <h3 className="font-semibold text-gray-900">Connecter Gmail</h3>
+                <p className="text-sm text-gray-500">
                   Recevez et envoyez des emails automatiquement
                 </p>
               </div>
@@ -231,7 +260,7 @@ function OnboardingPrompt({ hasShop, hasGmail }: { hasShop: boolean; hasGmail: b
               </Link>
             )}
             {!hasShop && (
-              <Button disabled variant="outline">
+              <Button disabled variant="secondary">
                 Connecter
               </Button>
             )}
@@ -241,18 +270,18 @@ function OnboardingPrompt({ hasShop, hasGmail }: { hasShop: boolean; hasGmail: b
         <Card>
           <CardContent className="flex items-center justify-between p-6">
             <div className="flex items-center gap-4">
-              <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
-                <span className="text-gray-500 font-bold">3</span>
+              <div className="w-12 h-12 rounded-xl bg-gray-50 border border-gray-200 flex items-center justify-center">
+                <Sparkles className="h-6 w-6 text-gray-400" />
               </div>
               <div>
-                <h3 className="font-semibold">Configurer les reponses</h3>
-                <p className="text-sm text-gray-600">
-                  Definissez vos politiques et ton de communication
+                <h3 className="font-semibold text-gray-900">Configurer les réponses</h3>
+                <p className="text-sm text-gray-500">
+                  Définissez vos politiques et ton de communication
                 </p>
               </div>
             </div>
             <Link href="/settings">
-              <Button variant="outline" disabled={!hasGmail}>
+              <Button variant="secondary" disabled={!hasGmail}>
                 Configurer
               </Button>
             </Link>

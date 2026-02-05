@@ -43,11 +43,67 @@ const config: Config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        // Glass colors
+        glass: {
+          white: "rgba(255, 255, 255, 0.05)",
+          "white-10": "rgba(255, 255, 255, 0.10)",
+          "white-20": "rgba(255, 255, 255, 0.20)",
+          dark: "rgba(0, 0, 0, 0.3)",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
+      },
+      boxShadow: {
+        glass: "0 8px 32px 0 rgba(0, 0, 0, 0.5)",
+        "glass-sm": "0 4px 16px 0 rgba(0, 0, 0, 0.3)",
+        "glass-lg": "0 12px 48px 0 rgba(0, 0, 0, 0.6)",
+        "glow-blue": "0 0 20px rgba(59, 130, 246, 0.4)",
+        "glow-blue-lg": "0 0 40px rgba(59, 130, 246, 0.3)",
+        "glow-purple": "0 0 20px rgba(139, 92, 246, 0.4)",
+        "glow-green": "0 0 20px rgba(16, 185, 129, 0.4)",
+        "inner-glow": "inset 0 0 20px rgba(255, 255, 255, 0.05)",
+      },
+      backdropBlur: {
+        xs: "2px",
+        glass: "12px",
+        "glass-xl": "24px",
+      },
+      animation: {
+        shimmer: "shimmer 1.5s infinite",
+        "fade-in": "fadeIn 0.3s ease-out",
+        "slide-up": "slideUp 0.4s ease-out",
+        "slide-down": "slideDown 0.3s ease-out",
+        "glow-pulse": "glowPulse 2s ease-in-out infinite",
+        float: "float 6s ease-in-out infinite",
+      },
+      keyframes: {
+        shimmer: {
+          "0%": { backgroundPosition: "-200% 0" },
+          "100%": { backgroundPosition: "200% 0" },
+        },
+        fadeIn: {
+          from: { opacity: "0" },
+          to: { opacity: "1" },
+        },
+        slideUp: {
+          from: { opacity: "0", transform: "translateY(20px)" },
+          to: { opacity: "1", transform: "translateY(0)" },
+        },
+        slideDown: {
+          from: { opacity: "0", transform: "translateY(-10px)" },
+          to: { opacity: "1", transform: "translateY(0)" },
+        },
+        glowPulse: {
+          "0%, 100%": { boxShadow: "0 0 20px rgba(59, 130, 246, 0.4)" },
+          "50%": { boxShadow: "0 0 30px rgba(59, 130, 246, 0.6)" },
+        },
+        float: {
+          "0%, 100%": { transform: "translateY(0px)" },
+          "50%": { transform: "translateY(-10px)" },
+        },
       },
     },
   },

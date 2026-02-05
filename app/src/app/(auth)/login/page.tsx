@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Sparkles, Mail, Lock } from "lucide-react"
 
 export default function LoginPage() {
   const router = useRouter()
@@ -46,60 +47,79 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
-      <Card className="w-full max-w-md">
-        <CardHeader className="text-center">
-          <Link href="/" className="text-2xl font-bold text-blue-600 mb-2">
-            Saiv
-          </Link>
-          <CardTitle>Connexion</CardTitle>
-          <CardDescription>
-            Connectez-vous a votre compte Saiv
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {error && (
-              <div className="p-3 text-sm text-red-600 bg-red-50 rounded-md">
-                {error}
+    <div className="min-h-screen flex items-center justify-center px-4">
+      {/* Background gradient orbs for depth */}
+      <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
+        <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-blue-200/40 rounded-full blur-[120px]" />
+        <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-purple-200/30 rounded-full blur-[120px]" />
+      </div>
+
+      <div className="w-full max-w-md fade-in">
+        <Card>
+          <CardHeader className="text-center pb-2">
+            <Link href="/" className="inline-flex items-center justify-center gap-2 mb-4">
+              <div className="p-2 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600">
+                <Sparkles className="h-5 w-5 text-white" />
               </div>
-            )}
-
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                name="email"
-                type="email"
-                placeholder="vous@exemple.com"
-                required
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="password">Mot de passe</Label>
-              <Input
-                id="password"
-                name="password"
-                type="password"
-                placeholder="••••••••"
-                required
-              />
-            </div>
-
-            <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? "Connexion..." : "Se connecter"}
-            </Button>
-          </form>
-
-          <div className="mt-6 text-center text-sm text-gray-600">
-            Pas encore de compte ?{" "}
-            <Link href="/register" className="text-blue-600 hover:underline">
-              Creer un compte
+              <span className="text-2xl font-bold gradient-text">Saiv</span>
             </Link>
-          </div>
-        </CardContent>
-      </Card>
+            <CardTitle className="text-xl">Connexion</CardTitle>
+            <CardDescription>
+              Connectez-vous à votre compte Saiv
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              {error && (
+                <div className="p-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded-xl">
+                  {error}
+                </div>
+              )}
+
+              <div className="space-y-2">
+                <Label htmlFor="email">Email</Label>
+                <div className="relative">
+                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                  <Input
+                    id="email"
+                    name="email"
+                    type="email"
+                    placeholder="vous@exemple.com"
+                    className="pl-10"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="password">Mot de passe</Label>
+                <div className="relative">
+                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                  <Input
+                    id="password"
+                    name="password"
+                    type="password"
+                    placeholder="••••••••"
+                    className="pl-10"
+                    required
+                  />
+                </div>
+              </div>
+
+              <Button type="submit" className="w-full" disabled={loading} isLoading={loading}>
+                {loading ? "Connexion..." : "Se connecter"}
+              </Button>
+            </form>
+
+            <div className="mt-6 text-center text-sm text-gray-500">
+              Pas encore de compte ?{" "}
+              <Link href="/register" className="text-blue-600 hover:text-blue-700 transition-colors">
+                Créer un compte
+              </Link>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   )
 }

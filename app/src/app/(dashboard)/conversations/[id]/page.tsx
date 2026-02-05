@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import Link from "next/link"
-import { ArrowLeft, User, Package, Mail } from "lucide-react"
+import { ArrowLeft, User, Package, Mail, Sparkles, Send, CheckCircle } from "lucide-react"
 import { revalidatePath } from "next/cache"
 
 export default async function ConversationDetailPage({
@@ -85,7 +85,7 @@ export default async function ConversationDetailPage({
       <div className="mb-6">
         <Link
           href="/conversations"
-          className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-4"
+          className="inline-flex items-center gap-2 text-gray-500 hover:text-gray-900 mb-4 transition-colors"
         >
           <ArrowLeft className="h-4 w-4" />
           Retour aux conversations
@@ -95,16 +95,17 @@ export default async function ConversationDetailPage({
             <h1 className="text-2xl font-bold text-gray-900">
               {conversation.subject}
             </h1>
-            <p className="text-gray-600">
+            <p className="text-gray-500">
               {conversation.customer?.email || "Client inconnu"}
             </p>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
             <StatusBadge status={conversation.status} />
             {conversation.status !== "RESOLVED" && (
               <form action={markResolved}>
-                <Button variant="outline" size="sm" type="submit">
-                  Marquer resolu
+                <Button variant="secondary" size="sm" type="submit">
+                  <CheckCircle className="h-4 w-4" />
+                  Marquer résolu
                 </Button>
               </form>
             )}
@@ -116,10 +117,13 @@ export default async function ConversationDetailPage({
         {/* Messages */}
         <div className="lg:col-span-2 space-y-6">
           <Card>
-            <CardHeader>
-              <CardTitle>Conversation</CardTitle>
+            <CardHeader className="border-b border-gray-200/50">
+              <CardTitle className="flex items-center gap-2">
+                <Mail className="h-4 w-4 text-blue-500" />
+                Conversation
+              </CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="p-6">
               <div className="space-y-4">
                 {conversation.messages.map((message) => (
                   <div
@@ -129,34 +133,41 @@ export default async function ConversationDetailPage({
                     }`}
                   >
                     <div
-                      className={`max-w-[80%] rounded-lg p-4 ${
+                      className={`max-w-[80%] ${
                         message.direction === "OUTBOUND"
-                          ? "bg-blue-600 text-white"
-                          : "bg-gray-100 text-gray-900"
+                          ? message.aiGenerated
+                            ? "message-outbound-ai"
+                            : "message-outbound"
+                          : "message-inbound"
                       }`}
                     >
                       <div className="flex items-center gap-2 mb-2">
-                        <span className="font-medium text-sm">
+                        <span className={`font-medium text-sm ${
+                          message.direction === "OUTBOUND" ? "text-white" : "text-gray-700"
+                        }`}>
                           {message.direction === "OUTBOUND"
                             ? message.aiGenerated
-                              ? "Saiv (IA)"
+                              ? "Saiv"
                               : "Vous"
                             : conversation.customer?.name || "Client"}
                         </span>
                         {message.aiGenerated && (
-                          <Badge variant="secondary" className="text-xs">
-                            Auto
+                          <Badge className="bg-purple-500/20 text-purple-600 border-purple-300 text-xs">
+                            <Sparkles className="h-3 w-3 mr-1" />
+                            IA
                           </Badge>
                         )}
                       </div>
-                      <p className="whitespace-pre-wrap">{message.content}</p>
-                      <p
-                        className={`text-xs mt-2 ${
-                          message.direction === "OUTBOUND"
-                            ? "text-blue-200"
-                            : "text-gray-400"
-                        }`}
-                      >
+                      <p className={`whitespace-pre-wrap text-sm leading-relaxed ${
+                        message.direction === "OUTBOUND" ? "text-white" : "text-gray-600"
+                      }`}>
+                        {message.content}
+                      </p>
+                      <p className={`text-xs mt-3 ${
+                        message.direction === "OUTBOUND"
+                          ? "text-white/70"
+                          : "text-gray-400"
+                      }`}>
                         {new Date(message.createdAt).toLocaleString("fr-FR")}
                       </p>
                     </div>
@@ -166,15 +177,27 @@ export default async function ConversationDetailPage({
 
               {/* Reply Form */}
               {conversation.status !== "RESOLVED" && (
-                <form action={sendReply} className="mt-6 pt-6 border-t">
+                <form action={sendReply} className="mt-6 pt-6 border-t border-gray-200/50">
                   <Textarea
                     name="content"
-                    placeholder="Ecrivez votre reponse..."
+                    placeholder="Écrivez votre réponse..."
                     className="mb-4"
                     rows={4}
                   />
-                  <Button type="submit">Envoyer la reponse</Button>
+                  <Button type="submit">
+                    <Send className="h-4 w-4" />
+                    Envoyer la réponse
+                  </Button>
                 </form>
+              )}
+
+              {conversation.status === "RESOLVED" && (
+                <div className="mt-6 pt-6 border-t border-gray-200/50">
+                  <div className="flex items-center justify-center gap-2 py-4 text-emerald-600">
+                    <CheckCircle className="h-5 w-5" />
+                    <span className="font-medium">Conversation résolue</span>
+                  </div>
+                </div>
               )}
             </CardContent>
           </Card>
@@ -184,40 +207,22 @@ export default async function ConversationDetailPage({
         <div className="space-y-6">
           {/* Customer Info */}
           <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <User className="h-4 w-4" />
+            <CardHeader className="border-b border-gray-200/50">
+              <CardTitle className="flex items-center gap-2 text-base">
+                <User className="h-4 w-4 text-blue-500" />
                 Client
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-3">
+            <CardContent className="p-4 space-y-4">
               {conversation.customer ? (
                 <>
-                  <div>
-                    <p className="text-sm text-gray-500">Nom</p>
-                    <p className="font-medium">
-                      {conversation.customer.name || "Non renseigne"}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-500">Email</p>
-                    <p className="font-medium">{conversation.customer.email}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-500">Commandes</p>
-                    <p className="font-medium">
-                      {conversation.customer.totalOrders} commande(s)
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-500">Total depense</p>
-                    <p className="font-medium">
-                      {Number(conversation.customer.totalSpent).toFixed(2)} EUR
-                    </p>
-                  </div>
+                  <InfoRow label="Nom" value={conversation.customer.name || "Non renseigné"} />
+                  <InfoRow label="Email" value={conversation.customer.email} />
+                  <InfoRow label="Commandes" value={`${conversation.customer.totalOrders} commande(s)`} />
+                  <InfoRow label="Total dépensé" value={`${Number(conversation.customer.totalSpent).toFixed(2)} €`} />
                 </>
               ) : (
-                <p className="text-gray-500">Client non identifie</p>
+                <p className="text-gray-400 text-sm">Client non identifié</p>
               )}
             </CardContent>
           </Card>
@@ -225,74 +230,51 @@ export default async function ConversationDetailPage({
           {/* Order Info */}
           {conversation.order && (
             <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Package className="h-4 w-4" />
+              <CardHeader className="border-b border-gray-200/50">
+                <CardTitle className="flex items-center gap-2 text-base">
+                  <Package className="h-4 w-4 text-blue-500" />
                   Commande
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-3">
-                <div>
-                  <p className="text-sm text-gray-500">Numero</p>
-                  <p className="font-medium">#{conversation.order.orderNumber}</p>
-                </div>
-                <div>
-                  <p className="text-sm text-gray-500">Statut</p>
-                  <p className="font-medium">{conversation.order.status}</p>
-                </div>
-                <div>
-                  <p className="text-sm text-gray-500">Livraison</p>
-                  <p className="font-medium">
-                    {conversation.order.fulfillmentStatus || "Non expedie"}
-                  </p>
-                </div>
+              <CardContent className="p-4 space-y-4">
+                <InfoRow label="Numéro" value={`#${conversation.order.orderNumber}`} />
+                <InfoRow label="Statut" value={conversation.order.status} />
+                <InfoRow label="Livraison" value={conversation.order.fulfillmentStatus || "Non expédié"} />
                 {conversation.order.trackingNumber && (
-                  <div>
-                    <p className="text-sm text-gray-500">Tracking</p>
-                    <p className="font-medium">{conversation.order.trackingNumber}</p>
-                  </div>
+                  <InfoRow label="Tracking" value={conversation.order.trackingNumber} />
                 )}
-                <div>
-                  <p className="text-sm text-gray-500">Montant</p>
-                  <p className="font-medium">
-                    {Number(conversation.order.totalPrice).toFixed(2)} EUR
-                  </p>
-                </div>
+                <InfoRow label="Montant" value={`${Number(conversation.order.totalPrice).toFixed(2)} €`} />
               </CardContent>
             </Card>
           )}
 
           {/* Conversation Info */}
           <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Mail className="h-4 w-4" />
-                Details
+            <CardHeader className="border-b border-gray-200/50">
+              <CardTitle className="flex items-center gap-2 text-base">
+                <Mail className="h-4 w-4 text-blue-500" />
+                Détails
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-3">
-              <div>
-                <p className="text-sm text-gray-500">Type</p>
-                <p className="font-medium">{conversation.type}</p>
-              </div>
-              <div>
-                <p className="text-sm text-gray-500">Cree le</p>
-                <p className="font-medium">
-                  {new Date(conversation.createdAt).toLocaleString("fr-FR")}
-                </p>
-              </div>
+            <CardContent className="p-4 space-y-4">
+              <InfoRow label="Type" value={getTypeLabel(conversation.type)} />
+              <InfoRow label="Créé le" value={new Date(conversation.createdAt).toLocaleString("fr-FR")} />
               {conversation.resolvedAt && (
-                <div>
-                  <p className="text-sm text-gray-500">Resolu le</p>
-                  <p className="font-medium">
-                    {new Date(conversation.resolvedAt).toLocaleString("fr-FR")}
-                  </p>
-                </div>
+                <InfoRow label="Résolu le" value={new Date(conversation.resolvedAt).toLocaleString("fr-FR")} />
               )}
             </CardContent>
           </Card>
         </div>
       </div>
+    </div>
+  )
+}
+
+function InfoRow({ label, value }: { label: string; value: string }) {
+  return (
+    <div>
+      <p className="text-xs text-gray-400 mb-1">{label}</p>
+      <p className="text-sm text-gray-900 font-medium">{value}</p>
     </div>
   )
 }
@@ -306,10 +288,10 @@ function StatusBadge({ status }: { status: string }) {
   }
 
   const labels: Record<string, string> = {
-    AUTO_REPLIED: "Repondu auto",
+    AUTO_REPLIED: "Répondu auto",
     ESCALATED: "Escalade",
     PENDING: "En attente",
-    RESOLVED: "Resolu",
+    RESOLVED: "Résolu",
   }
 
   return (
@@ -317,4 +299,16 @@ function StatusBadge({ status }: { status: string }) {
       {labels[status] || status}
     </Badge>
   )
+}
+
+function getTypeLabel(type: string): string {
+  const labels: Record<string, string> = {
+    TRACKING: "Suivi de commande",
+    RETURN: "Retour",
+    REFUND: "Remboursement",
+    PRODUCT: "Question produit",
+    COMPLAINT: "Réclamation",
+    OTHER: "Autre",
+  }
+  return labels[type] || type
 }
