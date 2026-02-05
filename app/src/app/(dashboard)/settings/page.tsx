@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
+import { Settings, MessageSquare, FileText, Link2, Trash2, Plus, CheckCircle, Zap } from "lucide-react"
 
 export default async function SettingsPage() {
   const user = await getCurrentUser()
@@ -94,57 +95,66 @@ export default async function SettingsPage() {
   return (
     <div className="max-w-3xl">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">Parametres</h1>
-        <p className="text-gray-600">Configurez le comportement de Saiv</p>
+        <h1 className="text-2xl font-bold text-white flex items-center gap-2">
+          <Settings className="h-6 w-6 text-purple-400" />
+          Paramètres
+        </h1>
+        <p className="text-slate-400">Configurez le comportement de Saiv</p>
       </div>
 
       <div className="space-y-6">
         {/* General Settings */}
         <Card>
           <CardHeader>
-            <CardTitle>Parametres generaux</CardTitle>
+            <CardTitle className="flex items-center gap-2">
+              <Zap className="h-5 w-5 text-purple-400" />
+              Paramètres généraux
+            </CardTitle>
             <CardDescription>
-              Configurez le ton et la signature des reponses
+              Configurez le ton et la signature des réponses
             </CardDescription>
           </CardHeader>
           <CardContent>
             <form action={updateSettings} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="tone">Ton de communication</Label>
+                <Label htmlFor="tone" className="text-slate-300">Ton de communication</Label>
                 <select
                   id="tone"
                   name="tone"
                   defaultValue={shop.tone}
-                  className="w-full h-10 rounded-md border border-input bg-background px-3 py-2 text-sm"
+                  className="w-full h-11 rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm text-white focus:outline-none focus:border-purple-500/50 focus:ring-2 focus:ring-purple-500/20"
                 >
-                  <option value="FORMAL">Formel (vouvoiement)</option>
-                  <option value="CASUAL">Decontracte (tutoiement pro)</option>
-                  <option value="FRIENDLY">Amical (tutoiement chaleureux)</option>
+                  <option value="FORMAL" className="bg-[#0a0a0f] text-white">Formel (vouvoiement)</option>
+                  <option value="CASUAL" className="bg-[#0a0a0f] text-white">Décontracté (tutoiement pro)</option>
+                  <option value="FRIENDLY" className="bg-[#0a0a0f] text-white">Amical (tutoiement chaleureux)</option>
                 </select>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="signature">Signature email</Label>
+                <Label htmlFor="signature" className="text-slate-300">Signature email</Label>
                 <Textarea
                   id="signature"
                   name="signature"
                   defaultValue={shop.signature || ""}
-                  placeholder="Cordialement,&#10;L'equipe {nom de la boutique}"
+                  placeholder="Cordialement,&#10;L'équipe {nom de la boutique}"
                   rows={3}
                 />
               </div>
 
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-3 p-4 rounded-xl bg-purple-500/10 border border-purple-500/20">
                 <input
                   type="checkbox"
                   id="autoReply"
                   name="autoReply"
                   defaultChecked={shop.autoReplyEnabled}
-                  className="rounded border-gray-300"
+                  className="w-5 h-5 rounded border-white/20 bg-white/5 text-purple-500 focus:ring-purple-500/30"
                 />
-                <Label htmlFor="autoReply">
-                  Activer les reponses automatiques
-                </Label>
+                <div>
+                  <Label htmlFor="autoReply" className="text-white font-medium cursor-pointer">
+                    Activer les réponses automatiques
+                  </Label>
+                  <p className="text-sm text-slate-400">L'IA répondra automatiquement aux emails clients</p>
+                </div>
               </div>
 
               <Button type="submit">Enregistrer</Button>
@@ -155,41 +165,44 @@ export default async function SettingsPage() {
         {/* Policies */}
         <Card>
           <CardHeader>
-            <CardTitle>Politiques de la boutique</CardTitle>
+            <CardTitle className="flex items-center gap-2">
+              <FileText className="h-5 w-5 text-purple-400" />
+              Politiques de la boutique
+            </CardTitle>
             <CardDescription>
-              L'IA utilisera ces informations pour repondre aux clients
+              L'IA utilisera ces informations pour répondre aux clients
             </CardDescription>
           </CardHeader>
           <CardContent>
             <form action={updatePolicies} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="returns">Politique de retour</Label>
+                <Label htmlFor="returns" className="text-slate-300">Politique de retour</Label>
                 <Textarea
                   id="returns"
                   name="returns"
-                  defaultValue={policies.returns || ""}
-                  placeholder="Ex: Retours acceptes sous 30 jours, produit non utilise..."
+                  defaultValue={policies?.returns || ""}
+                  placeholder="Ex: Retours acceptés sous 30 jours, produit non utilisé..."
                   rows={3}
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="refunds">Politique de remboursement</Label>
+                <Label htmlFor="refunds" className="text-slate-300">Politique de remboursement</Label>
                 <Textarea
                   id="refunds"
                   name="refunds"
-                  defaultValue={policies.refunds || ""}
-                  placeholder="Ex: Remboursement sous 14 jours apres reception du retour..."
+                  defaultValue={policies?.refunds || ""}
+                  placeholder="Ex: Remboursement sous 14 jours après réception du retour..."
                   rows={3}
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="shipping">Informations livraison</Label>
+                <Label htmlFor="shipping" className="text-slate-300">Informations livraison</Label>
                 <Textarea
                   id="shipping"
                   name="shipping"
-                  defaultValue={policies.shipping || ""}
+                  defaultValue={policies?.shipping || ""}
                   placeholder="Ex: Livraison en 2-5 jours ouvrables pour la France..."
                   rows={3}
                 />
@@ -203,55 +216,59 @@ export default async function SettingsPage() {
         {/* FAQ */}
         <Card>
           <CardHeader>
-            <CardTitle>FAQ personnalisee</CardTitle>
+            <CardTitle className="flex items-center gap-2">
+              <MessageSquare className="h-5 w-5 text-purple-400" />
+              FAQ personnalisée
+            </CardTitle>
             <CardDescription>
-              Ajoutez des questions/reponses frequentes pour aider l'IA
+              Ajoutez des questions/réponses fréquentes pour aider l'IA
             </CardDescription>
           </CardHeader>
           <CardContent>
             {/* Existing FAQ items */}
-            {faq.length > 0 && (
+            {faq && faq.length > 0 && (
               <div className="space-y-4 mb-6">
                 {faq.map((item, index) => (
-                  <div key={index} className="p-4 border rounded-lg">
+                  <div key={index} className="p-4 rounded-xl bg-white/[0.03] border border-white/[0.08]">
                     <div className="flex justify-between items-start mb-2">
-                      <p className="font-medium">{item.question}</p>
+                      <p className="font-medium text-white">{item.question}</p>
                       <form action={removeFaqItem}>
                         <input type="hidden" name="index" value={index} />
-                        <Button variant="ghost" size="sm" type="submit" className="text-red-600">
-                          Supprimer
+                        <Button variant="ghost" size="sm" type="submit" className="text-red-400 hover:text-red-300 hover:bg-red-500/10">
+                          <Trash2 className="h-4 w-4" />
                         </Button>
                       </form>
                     </div>
-                    <p className="text-gray-600 text-sm">{item.answer}</p>
+                    <p className="text-slate-400 text-sm">{item.answer}</p>
                   </div>
                 ))}
               </div>
             )}
 
             {/* Add new FAQ */}
-            <form action={addFaqItem} className="space-y-4 pt-4 border-t">
+            <form action={addFaqItem} className="space-y-4 pt-4 border-t border-white/[0.08]">
               <div className="space-y-2">
-                <Label htmlFor="question">Question</Label>
+                <Label htmlFor="question" className="text-slate-300">Question</Label>
                 <Input
                   id="question"
                   name="question"
-                  placeholder="Ex: Quels sont les delais de livraison ?"
+                  placeholder="Ex: Quels sont les délais de livraison ?"
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="answer">Reponse</Label>
+                <Label htmlFor="answer" className="text-slate-300">Réponse</Label>
                 <Textarea
                   id="answer"
                   name="answer"
-                  placeholder="Ex: Nos delais de livraison sont de 2-5 jours ouvrables..."
+                  placeholder="Ex: Nos délais de livraison sont de 2-5 jours ouvrables..."
                   rows={3}
                 />
               </div>
 
               <Button type="submit" variant="outline">
-                Ajouter a la FAQ
+                <Plus className="h-4 w-4" />
+                Ajouter à la FAQ
               </Button>
             </form>
           </CardContent>
@@ -260,29 +277,38 @@ export default async function SettingsPage() {
         {/* Connections */}
         <Card>
           <CardHeader>
-            <CardTitle>Connexions</CardTitle>
+            <CardTitle className="flex items-center gap-2">
+              <Link2 className="h-5 w-5 text-purple-400" />
+              Connexions
+            </CardTitle>
             <CardDescription>
-              Gerez vos integrations
+              Gérez vos intégrations
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="flex items-center justify-between p-4 border rounded-lg">
+            <div className="flex items-center justify-between p-4 rounded-xl bg-white/[0.03] border border-white/[0.08]">
               <div>
-                <p className="font-medium">Shopify</p>
-                <p className="text-sm text-gray-600">{shop.shopifyDomain}</p>
+                <p className="font-medium text-white">Shopify</p>
+                <p className="text-sm text-slate-400">{shop.shopifyDomain}</p>
               </div>
-              <span className="text-green-600 text-sm font-medium">Connecte</span>
+              <div className="flex items-center gap-2 text-emerald-400 text-sm font-medium">
+                <CheckCircle className="h-4 w-4" />
+                Connecté
+              </div>
             </div>
 
-            <div className="flex items-center justify-between p-4 border rounded-lg">
+            <div className="flex items-center justify-between p-4 rounded-xl bg-white/[0.03] border border-white/[0.08]">
               <div>
-                <p className="font-medium">Gmail</p>
-                <p className="text-sm text-gray-600">
-                  {shop.emailAddress || "Non configure"}
+                <p className="font-medium text-white">Gmail</p>
+                <p className="text-sm text-slate-400">
+                  {shop.emailAddress || "Non configuré"}
                 </p>
               </div>
               {shop.gmailRefreshToken ? (
-                <span className="text-green-600 text-sm font-medium">Connecte</span>
+                <div className="flex items-center gap-2 text-emerald-400 text-sm font-medium">
+                  <CheckCircle className="h-4 w-4" />
+                  Connecté
+                </div>
               ) : (
                 <a href="/api/gmail/connect">
                   <Button size="sm">Connecter</Button>

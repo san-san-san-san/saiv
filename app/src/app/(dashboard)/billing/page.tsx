@@ -185,7 +185,7 @@ export default function BillingPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-20">
-        <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
+        <Loader2 className="h-8 w-8 animate-spin text-purple-500" />
       </div>
     )
   }
@@ -199,15 +199,15 @@ export default function BillingPage() {
   return (
     <div className="max-w-5xl">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">Abonnement</h1>
-        <p className="text-gray-500">Gérez votre plan et votre facturation</p>
+        <h1 className="text-2xl font-bold text-white">Abonnement</h1>
+        <p className="text-slate-400">Gérez votre plan et votre facturation</p>
       </div>
 
       {/* Current Plan */}
       <Card className="mb-8">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <CreditCard className="h-5 w-5 text-blue-500" />
+          <CardTitle className="flex items-center gap-2 text-white">
+            <CreditCard className="h-5 w-5 text-purple-400" />
             Plan actuel
           </CardTitle>
           <CardDescription>Votre utilisation ce mois-ci</CardDescription>
@@ -215,12 +215,12 @@ export default function BillingPage() {
         <CardContent>
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h3 className="text-xl font-bold text-gray-900">{currentPlan.name}</h3>
-              <p className="text-gray-500">
+              <h3 className="text-xl font-bold text-white">{currentPlan.name}</h3>
+              <p className="text-slate-400">
                 {currentPlan.price > 0 ? `${currentPlan.price} €/mois` : "Gratuit"}
               </p>
               {user?.stripeCurrentPeriodEnd && (
-                <p className="text-sm text-gray-400 mt-1">
+                <p className="text-sm text-slate-500 mt-1">
                   Renouvellement le {new Date(user.stripeCurrentPeriodEnd).toLocaleDateString("fr-FR")}
                 </p>
               )}
@@ -242,21 +242,21 @@ export default function BillingPage() {
 
           <div className="space-y-2">
             <div className="flex justify-between text-sm">
-              <span className="text-gray-600">Emails utilisés</span>
-              <span className="text-gray-900 font-medium">
+              <span className="text-slate-400">Emails utilisés</span>
+              <span className="text-white font-medium">
                 {emailsThisMonth} / {currentPlan.emails}
               </span>
             </div>
-            <div className="w-full bg-gray-100 rounded-full h-2.5">
+            <div className="w-full bg-white/10 rounded-full h-2.5">
               <div
                 className={`h-2.5 rounded-full transition-all ${
-                  usagePercentage > 90 ? "bg-red-500" : "bg-blue-500"
+                  usagePercentage > 90 ? "bg-red-500" : "bg-purple-500"
                 }`}
                 style={{ width: `${usagePercentage}%` }}
               />
             </div>
             {usagePercentage > 80 && (
-              <p className="text-sm text-amber-600">
+              <p className="text-sm text-amber-400">
                 Vous approchez de votre limite mensuelle
               </p>
             )}
@@ -270,26 +270,26 @@ export default function BillingPage() {
           <Card
             key={plan.id}
             className={`relative ${
-              plan.popular ? "!border-blue-400 !border-2" : ""
-            } ${user?.plan === plan.id ? "!bg-blue-50/50" : ""}`}
+              plan.popular ? "!border-purple-400 !border-2" : ""
+            } ${user?.plan === plan.id ? "!bg-purple-500/10" : ""}`}
           >
             {plan.popular && (
-              <Badge className="absolute -top-3 left-1/2 -translate-x-1/2 bg-blue-500 text-white border-blue-500">
+              <Badge className="absolute -top-3 left-1/2 -translate-x-1/2 bg-purple-500 text-white border-purple-500">
                 Populaire
               </Badge>
             )}
             <CardHeader>
-              <CardTitle className="text-gray-900">{plan.name}</CardTitle>
+              <CardTitle className="text-white">{plan.name}</CardTitle>
               <div className="mt-2">
-                <span className="text-3xl font-bold text-gray-900">{plan.price}</span>
-                <span className="text-gray-500"> €/mois</span>
+                <span className="text-3xl font-bold text-white">{plan.price}</span>
+                <span className="text-slate-400"> €/mois</span>
               </div>
             </CardHeader>
             <CardContent>
               <ul className="space-y-2 mb-6">
                 {plan.features.map((feature) => (
-                  <li key={feature} className="flex items-center gap-2 text-sm text-gray-600">
-                    <Check className="h-4 w-4 text-emerald-500" />
+                  <li key={feature} className="flex items-center gap-2 text-sm text-slate-300">
+                    <Check className="h-4 w-4 text-emerald-400" />
                     {feature}
                   </li>
                 ))}
@@ -327,8 +327,8 @@ export default function BillingPage() {
       {/* Billing Info */}
       <Card className="mb-8">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Building2 className="h-5 w-5 text-blue-500" />
+          <CardTitle className="flex items-center gap-2 text-white">
+            <Building2 className="h-5 w-5 text-purple-400" />
             Informations de facturation
           </CardTitle>
           <CardDescription>
@@ -339,7 +339,7 @@ export default function BillingPage() {
           <form onSubmit={handleSaveBillingInfo} className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="companyName">Nom de l'entreprise</Label>
+                <Label htmlFor="companyName" className="text-slate-300">Nom de l'entreprise</Label>
                 <Input
                   id="companyName"
                   value={billingInfo.companyName || ""}
@@ -350,7 +350,7 @@ export default function BillingPage() {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="vatNumber">Numéro de TVA</Label>
+                <Label htmlFor="vatNumber" className="text-slate-300">Numéro de TVA</Label>
                 <Input
                   id="vatNumber"
                   value={billingInfo.vatNumber || ""}
@@ -363,7 +363,7 @@ export default function BillingPage() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="address">Adresse</Label>
+              <Label htmlFor="address" className="text-slate-300">Adresse</Label>
               <Input
                 id="address"
                 value={billingInfo.address || ""}
@@ -376,7 +376,7 @@ export default function BillingPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="postalCode">Code postal</Label>
+                <Label htmlFor="postalCode" className="text-slate-300">Code postal</Label>
                 <Input
                   id="postalCode"
                   value={billingInfo.postalCode || ""}
@@ -387,7 +387,7 @@ export default function BillingPage() {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="city">Ville</Label>
+                <Label htmlFor="city" className="text-slate-300">Ville</Label>
                 <Input
                   id="city"
                   value={billingInfo.city || ""}
@@ -398,7 +398,7 @@ export default function BillingPage() {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="country">Pays</Label>
+                <Label htmlFor="country" className="text-slate-300">Pays</Label>
                 <Input
                   id="country"
                   value={billingInfo.country || "FR"}
@@ -427,14 +427,14 @@ export default function BillingPage() {
       {/* Invoices */}
       <Card className="mb-8">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <FileText className="h-5 w-5 text-blue-500" />
+          <CardTitle className="flex items-center gap-2 text-white">
+            <FileText className="h-5 w-5 text-purple-400" />
             Historique des factures
           </CardTitle>
         </CardHeader>
         <CardContent>
           {invoices.length === 0 ? (
-            <p className="text-gray-500 text-center py-8">
+            <p className="text-slate-500 text-center py-8">
               Aucune facture pour le moment
             </p>
           ) : (
@@ -442,16 +442,16 @@ export default function BillingPage() {
               {invoices.map((invoice) => (
                 <div
                   key={invoice.id}
-                  className="flex items-center justify-between p-4 rounded-xl bg-gray-50/50 border border-gray-200/50"
+                  className="flex items-center justify-between p-4 rounded-xl bg-white/[0.03] border border-white/[0.08]"
                 >
                   <div>
-                    <p className="font-medium text-gray-900">{invoice.number}</p>
-                    <p className="text-sm text-gray-500">
+                    <p className="font-medium text-white">{invoice.number}</p>
+                    <p className="text-sm text-slate-500">
                       {new Date(invoice.createdAt).toLocaleDateString("fr-FR")}
                     </p>
                   </div>
                   <div className="flex items-center gap-4">
-                    <span className="font-medium text-gray-900">
+                    <span className="font-medium text-white">
                       {Number(invoice.amount).toFixed(2)} €
                     </span>
                     <Badge
@@ -481,32 +481,32 @@ export default function BillingPage() {
       {/* FAQ */}
       <Card>
         <CardHeader>
-          <CardTitle>Questions fréquentes</CardTitle>
+          <CardTitle className="text-white">Questions fréquentes</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div>
-            <h4 className="font-medium text-gray-900">
+            <h4 className="font-medium text-white">
               Puis-je changer de plan à tout moment ?
             </h4>
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-slate-400">
               Oui, vous pouvez upgrader ou downgrader à tout moment. Le changement
               sera effectif immédiatement.
             </p>
           </div>
           <div>
-            <h4 className="font-medium text-gray-900">
+            <h4 className="font-medium text-white">
               Que se passe-t-il si je dépasse ma limite ?
             </h4>
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-slate-400">
               Les emails supplémentaires ne seront pas traités automatiquement.
               Vous serez notifié pour upgrader votre plan.
             </p>
           </div>
           <div>
-            <h4 className="font-medium text-gray-900">
+            <h4 className="font-medium text-white">
               Comment annuler mon abonnement ?
             </h4>
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-slate-400">
               Vous pouvez annuler à tout moment depuis le portail de facturation.
               Votre plan restera actif jusqu'à la fin de la période payée.
             </p>
