@@ -4,8 +4,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import Link from "next/link"
-import { MessageSquare, CheckCircle, AlertCircle, Clock, ArrowRight, Sparkles, Mail, Zap } from "lucide-react"
+import { MessageSquare, CheckCircle, AlertCircle, Clock, ArrowRight, Sparkles, Mail, Zap, Key } from "lucide-react"
 import { FetchEmailsButton } from "@/components/FetchEmailsButton"
+import { ShopifyManualConnect } from "@/components/ShopifyManualConnect"
 
 export default async function DashboardPage() {
   const user = await getCurrentUser()
@@ -190,7 +191,7 @@ function StatusBadge({ status }: { status: string }) {
 
 function OnboardingPrompt({ hasShop, hasGmail }: { hasShop: boolean; hasGmail: boolean }) {
   return (
-    <div className="max-w-2xl mx-auto">
+    <div className="max-w-3xl mx-auto">
       <div className="text-center mb-8">
         <div className="inline-flex p-3 rounded-2xl bg-gradient-to-br from-blue-500/20 to-purple-500/20 border border-blue-200/50 mb-4">
           <Sparkles className="h-8 w-8 text-blue-500" />
@@ -203,91 +204,112 @@ function OnboardingPrompt({ hasShop, hasGmail }: { hasShop: boolean; hasGmail: b
         </p>
       </div>
 
-      <div className="space-y-4">
-        <Card className={hasShop ? "!border-emerald-300 !bg-emerald-50/50" : ""}>
-          <CardContent className="flex items-center justify-between p-6">
-            <div className="flex items-center gap-4">
-              <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${
-                hasShop
-                  ? "bg-emerald-100"
-                  : "bg-gray-50 border border-gray-200"
-              }`}>
-                {hasShop ? (
-                  <CheckCircle className="h-6 w-6 text-emerald-500" />
-                ) : (
-                  <Zap className="h-6 w-6 text-gray-400" />
-                )}
+      {/* Show Shopify connection options if no shop */}
+      {!hasShop && (
+        <div className="mb-8">
+          <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+            <span className="w-6 h-6 rounded-full bg-blue-500 text-white text-sm flex items-center justify-center">1</span>
+            Connecter votre boutique Shopify
+          </h2>
+
+          {/* Manual connection - Primary option */}
+          <ShopifyManualConnect />
+
+          {/* OAuth option - Secondary */}
+          <div className="mt-4 p-4 border border-dashed border-gray-300 rounded-xl bg-gray-50/50">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-lg bg-white border border-gray-200 flex items-center justify-center">
+                  <Zap className="h-5 w-5 text-gray-400" />
+                </div>
+                <div>
+                  <p className="font-medium text-gray-700">Connexion OAuth (App Shopify)</p>
+                  <p className="text-sm text-gray-500">Nécessite l'approbation de l'app Shopify</p>
+                </div>
               </div>
-              <div>
-                <h3 className="font-semibold text-gray-900">Connecter Shopify</h3>
-                <p className="text-sm text-gray-500">
-                  Accédez à vos commandes et clients
-                </p>
-              </div>
-            </div>
-            {!hasShop && (
               <Link href="/api/shopify/install">
-                <Button>Connecter</Button>
+                <Button variant="outline" size="sm">
+                  Utiliser OAuth
+                </Button>
               </Link>
-            )}
-          </CardContent>
-        </Card>
+            </div>
+          </div>
+        </div>
+      )}
 
-        <Card className={hasGmail ? "!border-emerald-300 !bg-emerald-50/50" : ""}>
-          <CardContent className="flex items-center justify-between p-6">
-            <div className="flex items-center gap-4">
-              <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${
-                hasGmail
-                  ? "bg-emerald-100"
-                  : "bg-gray-50 border border-gray-200"
-              }`}>
-                {hasGmail ? (
+      {/* Steps when shop is connected */}
+      {hasShop && (
+        <div className="space-y-4">
+          {/* Shopify - Done */}
+          <Card className="!border-emerald-300 !bg-emerald-50/50">
+            <CardContent className="flex items-center justify-between p-6">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 rounded-xl bg-emerald-100 flex items-center justify-center">
                   <CheckCircle className="h-6 w-6 text-emerald-500" />
-                ) : (
-                  <Mail className="h-6 w-6 text-gray-400" />
-                )}
+                </div>
+                <div>
+                  <h3 className="font-semibold text-gray-900">Shopify connecté</h3>
+                  <p className="text-sm text-gray-500">
+                    Accès aux commandes et clients activé
+                  </p>
+                </div>
               </div>
-              <div>
-                <h3 className="font-semibold text-gray-900">Connecter Gmail</h3>
-                <p className="text-sm text-gray-500">
-                  Recevez et envoyez des emails automatiquement
-                </p>
-              </div>
-            </div>
-            {hasShop && !hasGmail && (
-              <Link href="/api/gmail/connect">
-                <Button>Connecter</Button>
-              </Link>
-            )}
-            {!hasShop && (
-              <Button disabled variant="secondary">
-                Connecter
-              </Button>
-            )}
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
 
-        <Card>
-          <CardContent className="flex items-center justify-between p-6">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-gray-50 border border-gray-200 flex items-center justify-center">
-                <Sparkles className="h-6 w-6 text-gray-400" />
+          {/* Gmail */}
+          <Card className={hasGmail ? "!border-emerald-300 !bg-emerald-50/50" : ""}>
+            <CardContent className="flex items-center justify-between p-6">
+              <div className="flex items-center gap-4">
+                <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${
+                  hasGmail
+                    ? "bg-emerald-100"
+                    : "bg-gray-50 border border-gray-200"
+                }`}>
+                  {hasGmail ? (
+                    <CheckCircle className="h-6 w-6 text-emerald-500" />
+                  ) : (
+                    <Mail className="h-6 w-6 text-gray-400" />
+                  )}
+                </div>
+                <div>
+                  <h3 className="font-semibold text-gray-900">Connecter Gmail</h3>
+                  <p className="text-sm text-gray-500">
+                    Recevez et envoyez des emails automatiquement
+                  </p>
+                </div>
               </div>
-              <div>
-                <h3 className="font-semibold text-gray-900">Configurer les réponses</h3>
-                <p className="text-sm text-gray-500">
-                  Définissez vos politiques et ton de communication
-                </p>
+              {!hasGmail && (
+                <Link href="/api/gmail/connect">
+                  <Button>Connecter</Button>
+                </Link>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Configure */}
+          <Card>
+            <CardContent className="flex items-center justify-between p-6">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 rounded-xl bg-gray-50 border border-gray-200 flex items-center justify-center">
+                  <Sparkles className="h-6 w-6 text-gray-400" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-gray-900">Configurer les réponses</h3>
+                  <p className="text-sm text-gray-500">
+                    Définissez vos politiques et ton de communication
+                  </p>
+                </div>
               </div>
-            </div>
-            <Link href="/settings">
-              <Button variant="secondary" disabled={!hasGmail}>
-                Configurer
-              </Button>
-            </Link>
-          </CardContent>
-        </Card>
-      </div>
+              <Link href="/settings">
+                <Button variant="secondary" disabled={!hasGmail}>
+                  Configurer
+                </Button>
+              </Link>
+            </CardContent>
+          </Card>
+        </div>
+      )}
     </div>
   )
 }
