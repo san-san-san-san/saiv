@@ -1,3 +1,5 @@
+import Link from "next/link"
+
 export const metadata = {
   title: "Politique de Confidentialité - Saiv",
   description: "Politique de confidentialité de l'application Saiv",
@@ -5,18 +7,27 @@ export const metadata = {
 
 export default function PrivacyPage() {
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-3xl mx-auto bg-white rounded-lg shadow p-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-8">Politique de Confidentialité</h1>
-        <p className="text-sm text-gray-500 mb-8">Dernière mise à jour : {new Date().toLocaleDateString('fr-FR')}</p>
+    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-3xl mx-auto bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-white/50 p-8">
+        <Link href="/" className="text-blue-600 hover:text-blue-700 mb-6 inline-block">
+          ← Retour à l'accueil
+        </Link>
+
+        <h1 className="text-3xl font-bold text-gray-900 mb-4">Politique de Confidentialité</h1>
+        <p className="text-sm text-gray-500 mb-8">Dernière mise à jour : 5 février 2026</p>
 
         <section className="mb-8">
           <h2 className="text-xl font-semibold text-gray-900 mb-4">1. Introduction</h2>
-          <p className="text-gray-700 leading-relaxed">
-            Saiv (&quot;nous&quot;, &quot;notre&quot;, &quot;l&apos;application&quot;) s&apos;engage à protéger la vie privée des utilisateurs
-            de notre service d&apos;automatisation du service client pour Shopify. Cette politique de confidentialité
+          <p className="text-gray-700 leading-relaxed mb-4">
+            Saiv, édité par Studio Up (SIRET : 880 070 628 00016), s'engage à protéger la vie privée des utilisateurs
+            de notre service d'automatisation du service client pour Shopify. Cette politique de confidentialité
             explique comment nous collectons, utilisons et protégeons vos informations.
           </p>
+          <div className="text-gray-700 leading-relaxed space-y-1 text-sm bg-gray-50 p-4 rounded-lg">
+            <p><strong>Responsable du traitement :</strong> Studio Up</p>
+            <p><strong>Adresse :</strong> 15 rue Mauny, 17100 Saintes, France</p>
+            <p><strong>Contact :</strong> contact@studioup.fr</p>
+          </div>
         </section>
 
         <section className="mb-8">
@@ -90,7 +101,7 @@ export default function PrivacyPage() {
           <h2 className="text-xl font-semibold text-gray-900 mb-4">8. Contact</h2>
           <p className="text-gray-700 leading-relaxed">
             Pour toute question concernant cette politique de confidentialité ou vos données personnelles,
-            contactez-nous à : <a href="mailto:support@saiv.app" className="text-blue-600 hover:underline">support@saiv.app</a>
+            contactez-nous à : <a href="mailto:contact@studioup.fr" className="text-blue-600 hover:underline">contact@studioup.fr</a>
           </p>
         </section>
 
