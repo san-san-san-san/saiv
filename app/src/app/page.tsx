@@ -130,7 +130,7 @@ export default function Home() {
                 <li>✓ Historique 90 jours</li>
                 <li>✓ Support prioritaire</li>
               </ul>
-              <Button className="w-full mt-6 bg-white text-blue-600 hover:bg-blue-50">
+              <Button className="w-full mt-6 !bg-white !text-blue-600 hover:!bg-blue-50 !shadow-none">
                 Choisir
               </Button>
             </div>
