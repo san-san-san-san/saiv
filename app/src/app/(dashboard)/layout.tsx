@@ -14,16 +14,16 @@ export default async function DashboardLayout({
   }
 
   return (
-    <div className="flex h-screen">
-      {/* Background gradient orbs for depth */}
-      <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
-        <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-blue-200/30 rounded-full blur-[120px]" />
-        <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-purple-200/25 rounded-full blur-[120px]" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-cyan-100/20 rounded-full blur-[150px]" />
+    <div className="flex h-screen bg-[#030014]">
+      {/* Background effects */}
+      <div className="fixed inset-0 z-0 pointer-events-none">
+        <div className="absolute inset-0 bg-grid" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-purple-600/20 blur-[120px] rounded-full" />
+        <div className="absolute bottom-0 right-1/4 w-[600px] h-[400px] bg-pink-600/10 blur-[120px] rounded-full" />
       </div>
 
       <Sidebar />
-      <main className="flex-1 overflow-auto">
+      <main className="flex-1 overflow-auto relative z-10">
         <div className="p-8 fade-in">{children}</div>
       </main>
     </div>

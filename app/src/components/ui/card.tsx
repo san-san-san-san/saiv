@@ -8,11 +8,11 @@ const cardVariants = cva(
     variants: {
       variant: {
         default:
-          "bg-white/70 backdrop-blur-xl border border-white/50 shadow-[0_4px_24px_-1px_rgba(0,0,0,0.05),0_0_0_1px_rgba(255,255,255,0.5)_inset] hover:bg-white/85 hover:shadow-[0_8px_32px_-4px_rgba(0,0,0,0.1),0_0_0_1px_rgba(255,255,255,0.8)_inset] hover:-translate-y-0.5",
+          "bg-white/[0.03] backdrop-blur-xl border border-white/[0.08] shadow-[0_4px_30px_rgba(0,0,0,0.1)] hover:border-purple-500/30 hover:bg-white/[0.05]",
         static:
-          "bg-white/70 backdrop-blur-xl border border-white/50 shadow-[0_4px_24px_-1px_rgba(0,0,0,0.05),0_0_0_1px_rgba(255,255,255,0.5)_inset]",
+          "bg-white/[0.03] backdrop-blur-xl border border-white/[0.08] shadow-[0_4px_30px_rgba(0,0,0,0.1)]",
         active:
-          "bg-blue-50/80 backdrop-blur-xl border border-blue-200 shadow-[0_0_20px_rgba(59,130,246,0.15)]",
+          "bg-purple-500/10 backdrop-blur-xl border border-purple-500/30 shadow-[0_0_30px_rgba(147,51,234,0.15)]",
       },
     },
     defaultVariants: {
@@ -53,7 +53,7 @@ const CardTitle = React.forwardRef<
   <h3
     ref={ref}
     className={cn(
-      "text-lg font-semibold leading-none tracking-tight text-gray-900",
+      "text-lg font-semibold leading-none tracking-tight text-white",
       className
     )}
     {...props}
@@ -67,7 +67,7 @@ const CardDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <p
     ref={ref}
-    className={cn("text-sm text-gray-500", className)}
+    className={cn("text-sm text-slate-400", className)}
     {...props}
   />
 ))
